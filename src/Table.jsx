@@ -90,7 +90,13 @@ const Table = () => {
     <div className="table-wrapper">
       <h2 className="table-name">PrimeReact data table</h2>
 
-      <DataTable value={products} responsiveLayout="scroll">
+      <DataTable
+        value={products}
+        responsiveLayout="scroll"
+        showGridlines
+        size="small"
+        stripedRows
+      >
         <Column field="name" header="Name"/>
         <Column field="price" header="Price"/>
         <Column field="category" header="Category"/>
