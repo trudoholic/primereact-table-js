@@ -2,9 +2,12 @@ import { useState } from "react"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
 import { Rating } from "primereact/rating"
+import { Button } from "primereact/button"
+import { Dialog } from "primereact/dialog"
 
 const Table = () => {
   const [selectedProduct, setSelectedProduct] = useState(null)
+  const [dialogVisible, setDialogVisible] = useState(false)
 
   const products = [
     {
@@ -96,42 +99,75 @@ const Table = () => {
     return <Rating value={rowData.rating} readOnly cancel={false} />;
   }
 
+  const openDialog = () => {
+    setDialogVisible(true);
+  }
+
+  const closeDialog = () => {
+    setDialogVisible(false);
+  }
+
+  const dialogFooterTemplate = (
+    <Button label="Ok" icon="pi pi-check" onClick={closeDialog} />
+  )
+
   return (
     <div className="table-wrapper">
+
       <h2 className="table-name">PrimeReact data table</h2>
 
-      <DataTable
-        value={products}
-        header={header}
-        footer={footer}
-        responsiveLayout="scroll"
-        showGridlines
-        size="small"
-        stripedRows
+      <Button
+        label="View table"
+        icon="pi pi-external-link"
+        onClick={openDialog}
+      />
 
-        paginator
-        paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
-        rows={5}
-
-        selection={selectedProduct}
-        onSelectionChange={(e) => setSelectedProduct(e.value)}
-        dataKey="id"
+      <Dialog
+        header="Flex Scroll"
+        visible={dialogVisible}
+        style={{ width: "75vw" }}
+        maximizable
+        modal
+        contentStyle={{ height: "300px" }}
+        onHide={closeDialog}
+        footer={dialogFooterTemplate}
       >
-        <Column
-          selectionMode="single"
-          // selectionMode="multiple"
-        />
-        <Column field="name" header="Name" sortable/>
-        <Column field="price" header="Price" sortable/>
-        <Column field="category" header="Category" sortable/>
-        <Column field="quantity" header="Quantity" sortable/>
-        <Column
-          field="rating"
-          header="Rating"
-          body={ratingBodyTemplate}
-          sortable
-        />
-      </DataTable>
+
+        <DataTable
+          value={products}
+          header={header}
+          footer={footer}
+          responsiveLayout="scroll"
+          showGridlines
+          size="small"
+          stripedRows
+
+          paginator
+          paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
+          rows={5}
+
+          selection={selectedProduct}
+          onSelectionChange={(e) => setSelectedProduct(e.value)}
+          dataKey="id"
+        >
+          <Column
+            selectionMode="single"
+            // selectionMode="multiple"
+          />
+          <Column field="name" header="Name" sortable/>
+          <Column field="price" header="Price" sortable/>
+          <Column field="category" header="Category" sortable/>
+          <Column field="quantity" header="Quantity" sortable/>
+          <Column
+            field="rating"
+            header="Rating"
+            body={ratingBodyTemplate}
+            sortable
+          />
+        </DataTable>
+
+      </Dialog>
+
     </div>
   )
 }
