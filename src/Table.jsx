@@ -1,8 +1,11 @@
-// import React from "react"
+import { useState } from "react"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
+import { Rating } from "primereact/rating"
 
 const Table = () => {
+  const [selectedProduct, setSelectedProduct] = useState(null)
+
   const products = [
     {
       id: 1,
@@ -86,22 +89,48 @@ const Table = () => {
     },
   ]
 
+  const header = <p>All Products</p>
+  const footer = <p>Total products = {products ? products.length : 0}</p>
+
+  const ratingBodyTemplate = (rowData) => {
+    return <Rating value={rowData.rating} readOnly cancel={false} />;
+  }
+
   return (
     <div className="table-wrapper">
       <h2 className="table-name">PrimeReact data table</h2>
 
       <DataTable
         value={products}
+        header={header}
+        footer={footer}
         responsiveLayout="scroll"
         showGridlines
         size="small"
         stripedRows
+
+        paginator
+        paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
+        rows={5}
+
+        selection={selectedProduct}
+        onSelectionChange={(e) => setSelectedProduct(e.value)}
+        dataKey="id"
       >
-        <Column field="name" header="Name"/>
-        <Column field="price" header="Price"/>
-        <Column field="category" header="Category"/>
-        <Column field="quantity" header="Quantity"/>
-        <Column field="rating" header="Rating"/>
+        <Column
+          selectionMode="single"
+          // selectionMode="multiple"
+        />
+        <Column field="name" header="Name" sortable/>
+        <Column field="price" header="Price" sortable/>
+        <Column field="category" header="Category" sortable/>
+        <Column field="quantity" header="Quantity" sortable/>
+        <Column
+          field="rating"
+          header="Rating"
+          body={ratingBodyTemplate}
+          sortable
+        />
       </DataTable>
     </div>
   )
